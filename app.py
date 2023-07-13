@@ -17,11 +17,21 @@ from keras.preprocessing.sequence import pad_sequences
 from keras.models import Sequential
 from keras.layers import Embedding,LSTM,Dropout,Dense
 from keras.callbacks import EarlyStopping, ModelCheckpoint
-from nltk.corpus import stopwords
+#from nltk.corpus import stopwords
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelBinarizer
 from keras.models import load_model
 from keras import backend as K
+
+#second import
+from flask import Flask, request, render_template
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+import nltk
+from string import punctuation
+import re
+from nltk.corpus import stopwords
 
 
 # In[2]: Load Model
@@ -89,8 +99,37 @@ if conn.is_connected():
    print('Sucessfull connect')
 c = conn.cursor()
 
-# In[8]:
+#en setting
+nltk.download('stopwords')
+set(stopwords.words('english'))
 
+@app.route('/form')
+def my_form():
+    return render_template('form.html')
+
+@app.route('/form', methods=['POST'])
+def my_form_post():
+    stop_words = stopwords.words('english')
+    
+    #convert to lowercase
+    text1 = request.form['text1'].lower()
+    
+    text_final = ''.join(c for c in text1 if not c.isdigit())
+    
+    #remove punctuations
+    #text3 = ''.join(c for c in text2 if c not in punctuation)
+        
+    #remove stopwords    
+    processed_doc1 = ' '.join([word for word in text_final.split() if word not in stop_words])
+
+    sa = SentimentIntensityAnalyzer()
+    dd = sa.polarity_scores(text=processed_doc1)
+    compound = round((1 + dd['compound'])/2, 2)
+
+    return render_template('form.html', final=compound, text1=text_final,text2=dd['pos'],text5=dd['neg'],text4=compound,text3=dd['neu'])
+
+
+# In[8]:
 
 @app.route("/")
 def hello():
