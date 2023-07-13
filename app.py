@@ -70,6 +70,7 @@ def rate(p):
 import sys
 from flask import Flask, render_template, url_for,json, request, jsonify, redirect
 import MySQLdb
+import mysql.connector
 
 
 # In[7]:
@@ -78,12 +79,15 @@ import MySQLdb
 
 app = Flask(__name__)
 
-conn = MySQLdb.connect(host= "localhost",
+conn = mysql.connector.connect(host= "localhost",
                   user="root",
-                  passwd="pukar11",
-                  db="rating")
-c = conn.cursor()
+                  password="",
+                  database="rating")
 
+print(conn)
+if conn.is_connected():
+   print('Sucessfull connect')
+c = conn.cursor()
 
 # In[8]:
 
@@ -94,10 +98,10 @@ def hello():
 
 @app.route("/jacket", methods=['GET'])
 def jacket():
-    conn = MySQLdb.connect(host= "localhost",
+    conn = mysql.connector.connect(host= "localhost",
                   user="root",
-                  passwd="pukar11",
-                  db="rating")
+                  password="",
+                  database="rating")
     c = conn.cursor()
 
     #Fetch the reviews and their corresponding ratings for a product
@@ -131,10 +135,10 @@ def postreview():
     value=rate(pred.item(0,0))
 
     #Save the review, username and predicted value to the database
-    conn = MySQLdb.connect(host= "localhost",
+    conn = mysql.connector.connect(host= "localhost",
                   user="root",
-                  passwd="pukar11",
-                  db="rating")
+                  password="",
+                  database="rating")
     c = conn.cursor()
 
     c.execute(
