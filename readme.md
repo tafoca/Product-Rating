@@ -26,6 +26,7 @@ The application runs on Python's __Flask__ micro  web framework. The following p
   - SQLAlchemy
   - Flask-MySQL
   - mysqlclient
+  - mysql-connector-python
   
 Install these packages using <code>pip</code> (i.e. <code> pip install numpy</code>)
 
@@ -40,6 +41,7 @@ The folder should look as follows:
 > __Database__
   - Create a database named `rating` in your SQL Server (database and table names can be changed inside `rating.sql` file). 
   - Import the `rating.sql` into your SQL Database.
+  - Use Xampp DB manager
 
 ## Usage
 Open __Command Prompt (CMD)__ and navigate to the folder containing the files. Then run
